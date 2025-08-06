@@ -1,0 +1,30 @@
+`timescale 1ns/1ps
+module tb_serial_to_parallel;
+
+reg clk, rst, serial_in;
+wire [7:0] parallel_out;
+
+serial_to_parallel uut (.clk(clk), .rst(rst), .serial_in(serial_in), .parallel_out(parallel_out));
+
+reg [7:0] data = 8'b10110101;
+integer i;
+
+initial begin
+    $dumpfile("s2p.vcd");
+    $dumpvars(0, tb_serial_to_parallel);
+
+    clk = 0;
+    rst = 1; #10;
+    rst = 0;
+
+    for (i = 7; i >= 0; i = i - 1) begin
+        serial_in = data[i];
+        #10;
+    end
+
+    #50 $finish;
+end
+
+always #5 clk = ~clk;
+
+endmodule
